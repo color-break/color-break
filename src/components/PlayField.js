@@ -1,42 +1,58 @@
 import React, {useState, useEffect} from 'react';
-import {Dimensions, View} from 'react-native';
+import {Dimensions, Text, View} from 'react-native';
 import {GameEngine} from 'react-native-game-engine';
 import {Button} from './common';
 
 const {width} = Dimensions.get('window');
 const HORIZONTAL = 7;
 const VERTICAL = 13;
+const SPEED = 0.00000000001;
+const SPAWNPOINT = [Math.trunc(HORIZONTAL / 2), 1];
 
-const Square = ({color}) => {
+const Square = ({color, i, j, active}) => {
   const style = {
+    justifyContent: 'center',
+    alignItems: 'center',
     width: width / 9,
     height: width / 9,
     backgroundColor: color ? color : '#fff',
   };
 
-  return <View style={style} />;
+  return (
+    <View style={style}>
+      <Text>
+        [{i}, {j}]
+      </Text>
+    </View>
+  );
 };
 
-const createColor = () => {
-  const colors = ['red', 'blue', 'green', 'yellow', null];
+const createColor = color => {
+  const colors = ['red', 'blue', 'green', 'yellow'];
   const random = Math.floor(Math.random() * Math.floor(colors.length));
-  return colors[random];
+  return color ? colors[random] : null;
+};
+
+const generateKey = tag => {
+  return `${tag}_${new Date().getTime()}`;
 };
 
 const PlayField = () => {
   const [fields, setFields] = useState([]);
-  const [checkIteration, setCheckIteration] = useState(0);
+  const [activeBlock, setActiveBlock] = useState(false);
+  const [activePos, setActivePos] = useState(SPAWNPOINT);
+  const [cooldown, setCooldown] = useState(0);
 
   useEffect(() => {
     if (fields.length === 0) {
-      const grid = [];
+      let grid = [];
 
       for (let i = 0; i < HORIZONTAL; i++) {
         grid.push([]);
         for (let j = 0; j < VERTICAL; j++) {
           grid[i].push({
             pos: [i, j],
-            object: <Square key={`${i}${j}`} color={createColor()} />,
+            object: null,
           });
         }
       }
@@ -45,7 +61,35 @@ const PlayField = () => {
     }
   }, [fields]);
 
-  function check() {
+  const spawnBlock = () => {
+    if (!activeBlock && !fields[3][0].object && !fields[3][1].object) {
+      setActiveBlock(true);
+      fields[activePos[0]][activePos[1] - 1].object = (
+        <Square key={generateKey('30')} color={createColor(true)} active />
+      );
+      fields[activePos[0]][activePos[1]].object = (
+        <Square key={generateKey('31')} color={createColor(true)} active />
+      );
+    }
+  };
+
+  const dropActiveBlock = () => {
+    const posBelow = activePos[1] + 1;
+    if (
+      activeBlock &&
+      posBelow < VERTICAL &&
+      !fields[activePos[0]][activePos[1] + 1].object
+    ) {
+      reorder(activePos[0], activePos[1]);
+      reorder(activePos[0], activePos[1] - 1);
+      setActivePos([activePos[0], activePos[1] + 1]);
+    } else {
+      setActiveBlock(false);
+      setActivePos(SPAWNPOINT);
+    }
+  };
+
+  const check = () => {
     let row = [];
     let column = [];
 
@@ -53,7 +97,12 @@ const PlayField = () => {
       column = [];
 
       for (let j = 0; j < VERTICAL; j++) {
-        if (!fields[i][j].object.props.color) {
+        if (
+          j < VERTICAL - 1 &&
+          fields[i][j].object &&
+          !fields[i][j].object.props.active &&
+          !fields[i][j + 1].object
+        ) {
           reorder(i, j);
         }
 
@@ -64,14 +113,12 @@ const PlayField = () => {
     }
 
     setFields(row);
-  }
+  };
 
   function reorder(i, j) {
-    if (j !== 0) {
-      const temp = fields[i][j].object;
-      fields[i][j].object = fields[i][j - 1].object;
-      fields[i][j - 1].object = temp;
-    }
+    const temp = fields[i][j].object;
+    fields[i][j].object = fields[i][j + 1].object;
+    fields[i][j + 1].object = temp;
   }
 
   function render() {
@@ -83,7 +130,9 @@ const PlayField = () => {
         column = [];
 
         for (let j = 0; j < VERTICAL; j++) {
-          column.push(fields[i][j].object);
+          fields[i][j].object
+            ? column.push(fields[i][j].object)
+            : column.push(<Square key={generateKey(`${i}${j}`)} i={i} j={j} />);
         }
 
         row.push(<View key={`view${i}`}>{column}</View>);
@@ -94,6 +143,13 @@ const PlayField = () => {
   }
 
   const Update = (entities, {touches}) => {
+    if (cooldown > SPEED) {
+      setCooldown(0);
+      dropActiveBlock();
+    }
+
+    setCooldown(cooldown + 1);
+    spawnBlock();
     check();
 
     return entities;
@@ -101,11 +157,11 @@ const PlayField = () => {
 
   return (
     <>
-      <GameEngine systems={[Update]} />
       {render()}
       <View style={styles.bottomMenu}>
         <Button label="drop" onPress={() => check()} />
       </View>
+      <GameEngine systems={[Update]} />
     </>
   );
 };
