@@ -35,3 +35,11 @@ This problem exists, because the Xcode version 11 didn't include iPhone X as the
 ### 'React/RCTBridgeDelegate.h' file not found
 
 You need to run `pod install` in the `ios` directory to install the missing dependencies. Or you can follow this [link](https://github.com/facebook/react-native/issues/25758) for the explanations.
+
+### Error 'spawnSync ./gradlew EACCES'
+
+This error happens because insufficient permissions in your android/gradlew. You can fix this by running `chmod 755 android/gradlew` in your root project ([source](https://stackoverflow.com/questions/54541734/spawnsync-gradlew-eacces-error-when-running-react-native-project-on-emulator-u)).
+
+### Keystore file 'debug.keystore' not found
+
+You need to download from [here](https://raw.githubusercontent.com/facebook/react-native/master/template/android/app/debug.keystore) and put it to `android/app` directory.
