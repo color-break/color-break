@@ -76,11 +76,7 @@ const PlayField = () => {
   const dropActiveBlock = () => {
     const posBelow = activePos[1] + 1;
 
-    if (
-      activeBlock &&
-      posBelow < VERTICAL &&
-      !entities[`${activePos[0]}${posBelow}`].color
-    ) {
+    if (activeBlock && posBelow < VERTICAL && !entities[`${activePos[0]}${posBelow}`].color) {
       reorder(activePos[0], activePos[1]);
       reorder(activePos[0], activePos[1] - 1);
       setActivePos([activePos[0], posBelow]);
@@ -134,23 +130,19 @@ const PlayField = () => {
       let state = previous;
 
       let temp = state[`${activePos[0]}${activePos[1]}`].color;
-      state[`${activePos[0]}${activePos[1]}`].color =
-        state[`${destination[0]}${destination[1]}`].color;
+      state[`${activePos[0]}${activePos[1]}`].color = state[`${destination[0]}${destination[1]}`].color;
       state[`${destination[0]}${destination[1]}`].color = temp;
 
       temp = state[`${activePos[0]}${activePos[1]}`].active;
-      state[`${activePos[0]}${activePos[1]}`].active =
-        state[`${destination[0]}${destination[1]}`].active;
+      state[`${activePos[0]}${activePos[1]}`].active = state[`${destination[0]}${destination[1]}`].active;
       state[`${destination[0]}${destination[1]}`].active = temp;
 
       temp = state[`${activePos[0]}${activePos[1] - 1}`].color;
-      state[`${activePos[0]}${activePos[1] - 1}`].color =
-        state[`${destination[0]}${destination[1] - 1}`].color;
+      state[`${activePos[0]}${activePos[1] - 1}`].color = state[`${destination[0]}${destination[1] - 1}`].color;
       state[`${destination[0]}${destination[1] - 1}`].color = temp;
 
       temp = state[`${activePos[0]}${activePos[1] - 1}`].active;
-      state[`${activePos[0]}${activePos[1] - 1}`].active =
-        state[`${destination[0]}${destination[1] - 1}`].active;
+      state[`${activePos[0]}${activePos[1] - 1}`].active = state[`${destination[0]}${destination[1] - 1}`].active;
       state[`${destination[0]}${destination[1] - 1}`].active = temp;
 
       return state;
@@ -158,10 +150,7 @@ const PlayField = () => {
   }
 
   const onTapLeft = () => {
-    if (
-      activePos[0] > 0 &&
-      !entities[`${activePos[0] - 1}${activePos[1]}`].color
-    ) {
+    if (activePos[0] > 0 && !entities[`${activePos[0] - 1}${activePos[1]}`].color) {
       move([activePos[0] - 1, activePos[1]]);
       setActivePos([activePos[0] - 1, activePos[1]]);
     }
@@ -175,10 +164,7 @@ const PlayField = () => {
   };
 
   const onTapRight = () => {
-    if (
-      activePos[0] < HORIZONTAL - 1 &&
-      !entities[`${activePos[0] + 1}${activePos[1]}`].color
-    ) {
+    if (activePos[0] < HORIZONTAL - 1 && !entities[`${activePos[0] + 1}${activePos[1]}`].color) {
       move([activePos[0] + 1, activePos[1]]);
       setActivePos([activePos[0] + 1, activePos[1]]);
     }
@@ -195,16 +181,8 @@ const PlayField = () => {
 
   return (
     <>
-      <GameEngine
-        style={styles.engine}
-        systems={[update]}
-        entities={entities}
-      />
-      <Control
-        moveLeft={onTapLeft}
-        moveDown={onTapDown}
-        moveRight={onTapRight}
-      />
+      <GameEngine style={styles.engine} systems={[update]} entities={entities} />
+      <Control moveLeft={onTapLeft} moveDown={onTapDown} moveRight={onTapRight} />
     </>
   );
 };
