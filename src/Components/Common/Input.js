@@ -1,3 +1,9 @@
+/**
+ * Default input component.
+ *
+ * @author Hubert Ganda <hubertganda@gmail.com>
+ */
+
 import React from 'react';
 import {Dimensions, TextInput, View} from 'react-native';
 import {Icon} from './Icon';

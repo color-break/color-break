@@ -1,3 +1,9 @@
+/**
+ * Loader component for handling "loading" state.
+ *
+ * @author Hubert Ganda <hubertganda@gmail.com>
+ */
+
 import React from 'react';
 import {ActivityIndicator, View} from 'react-native';
 

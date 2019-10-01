@@ -1,8 +1,13 @@
+/**
+ * Play field component. This component will handle our game state and play area.
+ *
+ * @author Hubert Ganda <hubertganda@gmail.com>
+ */
+
 import React, {useState, useEffect} from 'react';
 import {Dimensions, Text, View} from 'react-native';
 import {GameEngine} from 'react-native-game-engine';
 import Control from './Control';
-import {Button} from './Common';
 
 const {width, height} = Dimensions.get('window');
 const HORIZONTAL = 7;

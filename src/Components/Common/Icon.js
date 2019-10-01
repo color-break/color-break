@@ -1,3 +1,9 @@
+/**
+ * Default icon component.
+ *
+ * @author Hubert Ganda <hubertganda@gmail.com>
+ */
+
 import React from 'react';
 import {Dimensions, Image, TouchableOpacity} from 'react-native';
 

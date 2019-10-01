@@ -1,3 +1,9 @@
+/**
+ * Test control button area.
+ *
+ * @author Hubert Ganda <hubertganda@gmail.com>
+ */
+
 import React from 'react';
 import {Dimensions, View} from 'react-native';
 import {Button} from './Common';

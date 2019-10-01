@@ -1,3 +1,9 @@
+/**
+ * Default button component.
+ *
+ * @author Hubert Ganda <hubertganda@gmail.com>
+ */
+
 import React from 'react';
 import {Dimensions, Text, TouchableOpacity} from 'react-native';
 
