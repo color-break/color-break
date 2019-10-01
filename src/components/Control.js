@@ -1,13 +1,15 @@
 import React from 'react';
-import {TouchableOpacity, View} from 'react-native';
+import {Dimensions, View} from 'react-native';
 import {Button} from './common';
 
-const Control = () => {
+const {width} = Dimensions.get('window');
+
+const Control = ({moveLeft, moveDown, moveRight}) => {
   return (
     <View style={styles.container}>
-      <Button />
-      <Button />
-      <Button />
+      <Button style={styles.button} label="Left" onPress={moveLeft} />
+      <Button style={styles.button} label="Down" onPress={moveDown} />
+      <Button style={styles.button} label="Right" onPress={moveRight} />
     </View>
   );
 };
@@ -15,7 +17,15 @@ const Control = () => {
 const styles = {
   container: {
     flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  button: {
+    width: width * 0.3,
   },
 };
 
 export default Control;
+
+// *1 *1 = *2 = *3
+// *1 *1 = *2 >
+// *1 *1 = *2 >

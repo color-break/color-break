@@ -3,9 +3,9 @@ import {Dimensions, Text, TouchableOpacity} from 'react-native';
 
 const {width} = Dimensions.get('window');
 
-const Button = ({onPress, label}) => {
+const Button = ({onPress, label, style}) => {
   return (
-    <TouchableOpacity style={styles.button} onPress={onPress}>
+    <TouchableOpacity style={{...styles.button, ...style}} onPress={onPress}>
       <Text style={styles.text}>{label}</Text>
     </TouchableOpacity>
   );
