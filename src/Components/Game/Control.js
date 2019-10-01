@@ -6,7 +6,7 @@
 
 import React from 'react';
 import {Dimensions, View} from 'react-native';
-import {Button} from './Common';
+import {Button} from '../Common';
 
 const {width} = Dimensions.get('window');
 const styles = {

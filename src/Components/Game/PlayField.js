@@ -7,8 +7,8 @@
 import React, {useState} from 'react';
 import {Dimensions} from 'react-native';
 import {GameEngine} from 'react-native-game-engine';
+import Block from './Block';
 import Control from './Control';
-import Block from './Game/Block';
 
 const {width, height} = Dimensions.get('window');
 const HORIZONTAL = 5;

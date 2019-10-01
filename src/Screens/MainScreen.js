@@ -5,6 +5,6 @@
  */
 
 import React from 'react';
-import PlayField from '../Components/PlayField';
+import PlayField from '../Components/Game/PlayField';
 
 export default () => <PlayField />;
