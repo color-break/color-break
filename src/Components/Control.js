@@ -15,7 +15,7 @@ const styles = {
     justifyContent: 'space-around',
   },
   button: {
-    width: width * 0.3,
+    width: width * 0.2,
   },
 };
 
@@ -25,6 +25,7 @@ export default ({moveLeft, moveDown, moveRight}) => {
       <Button style={styles.button} label="Left" onPress={moveLeft} />
       <Button style={styles.button} label="Down" onPress={moveDown} />
       <Button style={styles.button} label="Right" onPress={moveRight} />
+      <Button style={styles.button} label="Rotate" onPress={() => {}} />
     </View>
   );
 };
