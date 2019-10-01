@@ -7,7 +7,7 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 
-export default ({width, height, position, coordinate, color = '#fff'}) => {
+export default ({width, height, position, coordinate, color}) => {
   const style = {
     justifyContent: 'center',
     alignItems: 'center',
@@ -16,7 +16,7 @@ export default ({width, height, position, coordinate, color = '#fff'}) => {
     top: position[1],
     width: width,
     height: height,
-    backgroundColor: color,
+    backgroundColor: color ? color : '#fff',
   };
 
   return (

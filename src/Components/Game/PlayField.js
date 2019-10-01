@@ -5,30 +5,43 @@
  */
 
 import React, {useState} from 'react';
-import {Dimensions} from 'react-native';
 import {GameEngine} from 'react-native-game-engine';
 import Block from './Block';
 import Control from './Control';
+import config from '../../Config';
 
-const {width, height} = Dimensions.get('window');
-const HORIZONTAL = 5;
-const VERTICAL = 11;
-const SPAWNPOINT = [Math.trunc(HORIZONTAL / 2), 1];
-const BLOCKWIDTH = width / 9;
-const OFFSETX = (width - BLOCKWIDTH * HORIZONTAL) / 2;
-const OFFSETY = (height - BLOCKWIDTH * VERTICAL) / 4;
+/**
+ * Block tiles spawn point.
+ *
+ * @var {Array}
+ */
+const SPAWNPOINT = [Math.trunc(config.tiles.x / 2), 1];
 
-const createColor = color => {
-  const colors = ['red', 'blue', 'green', 'yellow'];
-  const random = Math.floor(Math.random() * Math.floor(colors.length));
-  return color ? colors[random] : null;
+/**
+ * Generate a random color from color configuration.
+ *
+ * @return {String}
+ */
+const createColor = () => {
+  const random = Math.floor(Math.random() * Math.floor(config.colors.length));
+
+  return config.colors[random];
 };
 
+/**
+ * Generate a default entity for GameEngine component used later.
+ *
+ * @param {Number}  x - Indicates the x coordinate in array tiles.
+ * @param {Number}  y - Indicates the y coordinate in array tiles.
+ * @param {String}  [color=null] - The color for tiles.
+ * @param {Boolean} [active=false] - Active status for current tile.
+ * @return {Object}
+ */
 const createEntity = (x, y, color = null, active = false) => {
   return {
-    width: BLOCKWIDTH,
-    height: BLOCKWIDTH,
-    position: [OFFSETX + x * BLOCKWIDTH, OFFSETY + y * BLOCKWIDTH],
+    width: config.block.width,
+    height: config.block.height,
+    position: [config.offset.x + x * config.block.width, config.offset.y + y * config.block.height],
     coordinate: [x, y],
     color: color,
     active: active,
@@ -36,11 +49,16 @@ const createEntity = (x, y, color = null, active = false) => {
   };
 };
 
+/**
+ * Generate entities for default component state.
+ *
+ * @return {Object}
+ */
 const createEntities = () => {
   let entities = {};
 
-  for (let x = 0; x < HORIZONTAL; x++) {
-    for (let y = 0; y < VERTICAL; y++) {
+  for (let x = 0; x < config.tiles.x; x++) {
+    for (let y = 0; y < config.tiles.y; y++) {
       entities[`${x}${y}`] = createEntity(x, y);
     }
   }
@@ -48,7 +66,18 @@ const createEntities = () => {
   return entities;
 };
 
-const PlayField = () => {
+/**
+ * Component stylesheet.
+ *
+ * @var {Object}
+ */
+const styles = {
+  engine: {
+    flex: 1,
+  },
+};
+
+export default () => {
   const [entities, setEntities] = useState(createEntities());
   const [activeBlock, setActiveBlock] = useState(false);
   const [activePos, setActivePos] = useState(SPAWNPOINT);
@@ -76,7 +105,7 @@ const PlayField = () => {
   const dropActiveBlock = () => {
     const posBelow = activePos[1] + 1;
 
-    if (activeBlock && posBelow < VERTICAL && !entities[`${activePos[0]}${posBelow}`].color) {
+    if (activeBlock && posBelow < config.tiles.y && !entities[`${activePos[0]}${posBelow}`].color) {
       reorder(activePos[0], activePos[1]);
       reorder(activePos[0], activePos[1] - 1);
       setActivePos([activePos[0], posBelow]);
@@ -96,10 +125,10 @@ const PlayField = () => {
   };
 
   const check = () => {
-    for (let i = 0; i < HORIZONTAL; i++) {
-      for (let j = 0; j < VERTICAL; j++) {
+    for (let i = 0; i < config.tiles.x; i++) {
+      for (let j = 0; j < config.tiles.y; j++) {
         if (
-          j + 1 < VERTICAL &&
+          j + 1 < config.tiles.y &&
           entities[`${i}${j}`].color &&
           !entities[`${i}${j + 1}`].color &&
           !entities[`${i}${j}`].active
@@ -164,12 +193,12 @@ const PlayField = () => {
   };
 
   const onTapRight = () => {
-    if (activePos[0] < HORIZONTAL - 1 && !entities[`${activePos[0] + 1}${activePos[1]}`].color) {
+    if (activePos[0] < config.tiles.x - 1 && !entities[`${activePos[0] + 1}${activePos[1]}`].color) {
       move([activePos[0] + 1, activePos[1]]);
       setActivePos([activePos[0] + 1, activePos[1]]);
     }
 
-    console.log('move right', activePos[0], HORIZONTAL);
+    console.log('move right', activePos[0], config.tiles.x);
   };
 
   const update = () => {
@@ -186,21 +215,3 @@ const PlayField = () => {
     </>
   );
 };
-
-const styles = {
-  engine: {
-    flex: 1,
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: width * 0.02,
-  },
-  bottomMenu: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-};
-
-export default PlayField;
