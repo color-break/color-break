@@ -4,8 +4,8 @@
  * @author Hubert Ganda <hubertganda@gmail.com>
  */
 
-import React, {useState, useEffect} from 'react';
-import {Dimensions, Text, View} from 'react-native';
+import React, {useState} from 'react';
+import {Dimensions} from 'react-native';
 import {GameEngine} from 'react-native-game-engine';
 import Control from './Control';
 import Block from './Game/Block';
@@ -188,6 +188,7 @@ const PlayField = () => {
 
   const update = () => {
     spawnBlock();
+    check();
 
     return entities;
   };
