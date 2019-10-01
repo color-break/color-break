@@ -19,7 +19,7 @@ const OFFSETX = (width - BLOCKWIDTH * HORIZONTAL) / 2;
 const OFFSETY = (height - BLOCKWIDTH * VERTICAL) / 4;
 let ENTITY = {};
 
-const Block = ({position}) => {
+const Block = ({position, color, coordinate, active}) => {
   const style = {
     justifyContent: 'center',
     alignItems: 'center',
@@ -28,13 +28,13 @@ const Block = ({position}) => {
     top: position[1],
     width: BLOCKWIDTH,
     height: BLOCKWIDTH,
-    backgroundColor: position[2] ? position[2] : '#fff',
+    backgroundColor: color ? color : '#fff',
   };
 
   return (
     <View style={style}>
       <Text>
-        [{position[3]}, {position[4]}]
+        [{coordinate[0]}, {coordinate[1]}]
       </Text>
     </View>
   );
@@ -54,14 +54,10 @@ const createEntity = () => {
   for (let i = 0; i < HORIZONTAL; i++) {
     for (let j = 0; j < VERTICAL; j++) {
       ENTITY[`b${i}${j}`] = {
-        position: [
-          OFFSETX + i * BLOCKWIDTH,
-          OFFSETY + j * BLOCKWIDTH,
-          createColor(false),
-          i,
-          j,
-          false,
-        ],
+        position: [OFFSETX + i * BLOCKWIDTH, OFFSETY + j * BLOCKWIDTH],
+        color: createColor(false),
+        coordinate: [i, j],
+        active: false,
         renderer: <Block />,
       };
     }
@@ -95,12 +91,16 @@ const PlayField = () => {
   }, [fields]);
 
   const spawnBlock = () => {
-    if (!activeBlock && !ENTITY.b30.position[2] && !ENTITY.b31.position[2]) {
+    if (
+      !activeBlock &&
+      !ENTITY[`b${activePos[0]}${activePos[1]}`].color &&
+      !ENTITY[`b${activePos[0]}${activePos[1] - 1}`].color
+    ) {
       setActiveBlock(true);
-      ENTITY.b30.position[2] = createColor(true);
-      ENTITY.b31.position[2] = createColor(true);
-      ENTITY.b30.position[5] = true;
-      ENTITY.b31.position[5] = true;
+      ENTITY[`b${activePos[0]}${activePos[1]}`].color = createColor(true);
+      ENTITY[`b${activePos[0]}${activePos[1]}`].active = true;
+      ENTITY[`b${activePos[0]}${activePos[1] - 1}`].color = createColor(true);
+      ENTITY[`b${activePos[0]}${activePos[1] - 1}`].active = true;
     }
   };
 
@@ -110,14 +110,14 @@ const PlayField = () => {
     if (
       activeBlock &&
       posBelow < VERTICAL &&
-      !ENTITY[`b${activePos[0]}${posBelow}`].position[2]
+      !ENTITY[`b${activePos[0]}${posBelow}`].color
     ) {
       reorder(activePos[0], activePos[1]);
       reorder(activePos[0], activePos[1] - 1);
       setActivePos([activePos[0], posBelow]);
     } else {
-      ENTITY[`b${activePos[0]}${activePos[1]}`].position[5] = false;
-      ENTITY[`b${activePos[0]}${activePos[1] - 1}`].position[5] = false;
+      ENTITY[`b${activePos[0]}${activePos[1]}`].active = false;
+      ENTITY[`b${activePos[0]}${activePos[1] - 1}`].active = false;
       setActiveBlock(false);
       setActivePos(SPAWNPOINT);
     }
@@ -128,9 +128,9 @@ const PlayField = () => {
       for (let j = 0; j < VERTICAL; j++) {
         if (
           j + 1 < VERTICAL &&
-          ENTITY[`b${i}${j}`].position[2] &&
-          !ENTITY[`b${i}${j + 1}`].position[2] &&
-          !ENTITY[`b${i}${j}`].position[5]
+          ENTITY[`b${i}${j}`].color &&
+          !ENTITY[`b${i}${j + 1}`].color &&
+          !ENTITY[`b${i}${j}`].active
         ) {
           reorder(i, j);
         }
@@ -139,24 +139,34 @@ const PlayField = () => {
   };
 
   function reorder(i, j) {
-    ENTITY[`b${i}${j + 1}`].position[2] = ENTITY[`b${i}${j}`].position[2];
-    ENTITY[`b${i}${j}`].position[2] = null;
+    ENTITY[`b${i}${j + 1}`].color = ENTITY[`b${i}${j}`].color;
+    ENTITY[`b${i}${j}`].color = null;
 
-    const tempStatus = ENTITY[`b${i}${j + 1}`].position[5];
-    ENTITY[`b${i}${j + 1}`].position[5] = ENTITY[`b${i}${j}`].position[5];
-    ENTITY[`b${i}${j}`].position[5] = tempStatus;
+    const tempStatus = ENTITY[`b${i}${j + 1}`].active;
+    ENTITY[`b${i}${j + 1}`].active = ENTITY[`b${i}${j}`].active;
+    ENTITY[`b${i}${j}`].active = tempStatus;
   }
 
   function move(destination) {
-    let temp = ENTITY[`b${activePos[0]}${activePos[1]}`].position;
-    ENTITY[`b${activePos[0]}${activePos[1]}`].position =
-      ENTITY[`b${destination[0]}${destination[1]}`].position;
-    ENTITY[`b${destination[0]}${destination[1]}`].position = temp;
+    let temp = ENTITY[`b${activePos[0]}${activePos[1]}`].color;
+    ENTITY[`b${activePos[0]}${activePos[1]}`].color =
+      ENTITY[`b${destination[0]}${destination[1]}`].color;
+    ENTITY[`b${destination[0]}${destination[1]}`].color = temp;
 
-    temp = ENTITY[`b${activePos[0]}${activePos[1] - 1}`].position;
-    ENTITY[`b${activePos[0]}${activePos[1] - 1}`].position =
-      ENTITY[`b${destination[0]}${destination[1] - 1}`].position;
-    ENTITY[`b${destination[0]}${destination[1] - 1}`].position = temp;
+    temp = ENTITY[`b${activePos[0]}${activePos[1]}`].active;
+    ENTITY[`b${activePos[0]}${activePos[1]}`].active =
+      ENTITY[`b${destination[0]}${destination[1]}`].active;
+    ENTITY[`b${destination[0]}${destination[1]}`].active = temp;
+
+    temp = ENTITY[`b${activePos[0]}${activePos[1] - 1}`].color;
+    ENTITY[`b${activePos[0]}${activePos[1] - 1}`].color =
+      ENTITY[`b${destination[0]}${destination[1] - 1}`].color;
+    ENTITY[`b${destination[0]}${destination[1] - 1}`].color = temp;
+
+    temp = ENTITY[`b${activePos[0]}${activePos[1] - 1}`].active;
+    ENTITY[`b${activePos[0]}${activePos[1] - 1}`].active =
+      ENTITY[`b${destination[0]}${destination[1] - 1}`].active;
+    ENTITY[`b${destination[0]}${destination[1] - 1}`].active = temp;
   }
 
   function render() {
@@ -181,32 +191,41 @@ const PlayField = () => {
   }
 
   const onTapLeft = () => {
-    console.log('move left');
-
     if (
       activePos[0] > 0 &&
-      !ENTITY[`b${activePos[0] - 1}${activePos[1]}`].position[2]
+      !ENTITY[`b${activePos[0] - 1}${activePos[1]}`].color
     ) {
       move([activePos[0] - 1, activePos[1]]);
       setActivePos([activePos[0] - 1, activePos[1]]);
     }
+
+    console.log('move left', activePos[0]);
   };
 
   const onTapDown = () => {
+    dropActiveBlock();
     console.log('move down');
   };
 
   const onTapRight = () => {
-    console.log('move right');
+    if (
+      activePos[0] < HORIZONTAL - 1 &&
+      !ENTITY[`b${activePos[0] + 1}${activePos[1]}`].color
+    ) {
+      move([activePos[0] + 1, activePos[1]]);
+      setActivePos([activePos[0] + 1, activePos[1]]);
+    }
+
+    console.log('move right', activePos[0], HORIZONTAL);
   };
 
   const Update = (entities, {touches}) => {
-    setCooldown(cooldown + 1);
-
-    if (cooldown > SPEED) {
-      setCooldown(0);
-      dropActiveBlock();
-    }
+    // setCooldown(cooldown + 1);
+    //
+    // if (cooldown > SPEED) {
+    //   setCooldown(0);
+    //   dropActiveBlock();
+    // }
 
     spawnBlock();
     check();
