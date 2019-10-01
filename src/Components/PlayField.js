@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from './node_modules/react';
+import React, {useState, useEffect} from 'react';
 import {Dimensions, Text, View} from 'react-native';
 import {GameEngine} from 'react-native-game-engine';
 import Control from './Control';

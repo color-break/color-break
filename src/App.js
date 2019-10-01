@@ -1,8 +1,4 @@
 import React from 'react';
-import MainScreen from './screens/MainScreen';
+import MainScreen from './Screens/MainScreen';
 
-const App = () => {
-  return <MainScreen />;
-};
-
-export default App;
+export default () => <MainScreen />;
