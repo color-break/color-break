@@ -10,32 +10,14 @@ import {GameEngine} from 'react-native-game-engine';
 import Control from './Control';
 
 const {width, height} = Dimensions.get('window');
-const HORIZONTAL = 7;
-const VERTICAL = 13;
+const HORIZONTAL = 5;
+const VERTICAL = 11;
 const SPEED = 3;
 const SPAWNPOINT = [Math.trunc(HORIZONTAL / 2), 1];
 const BLOCKWIDTH = width / 9;
 const OFFSETX = (width - BLOCKWIDTH * HORIZONTAL) / 2;
 const OFFSETY = (height - BLOCKWIDTH * VERTICAL) / 4;
 let ENTITY = {};
-
-const Square = ({color, i, j, active}) => {
-  const style = {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: BLOCKWIDTH,
-    height: BLOCKWIDTH,
-    backgroundColor: color ? color : '#fff',
-  };
-
-  return (
-    <View style={style}>
-      <Text>
-        [{i}, {j}]
-      </Text>
-    </View>
-  );
-};
 
 const Block = ({position}) => {
   const style = {
@@ -84,10 +66,6 @@ const createEntity = () => {
       };
     }
   }
-
-  console.log('create', ENTITY);
-  //
-  // return ENTITY;
 };
 
 const PlayField = () => {
@@ -124,16 +102,6 @@ const PlayField = () => {
       ENTITY.b30.position[5] = true;
       ENTITY.b31.position[5] = true;
     }
-
-    // if (!activeBlock && !fields[3][0].object && !fields[3][1].object) {
-    //   setActiveBlock(true);
-    //   fields[activePos[0]][activePos[1] - 1].object = (
-    //     <Square key={generateKey('30')} color={createColor(true)} active />
-    //   );
-    //   fields[activePos[0]][activePos[1]].object = (
-    //     <Square key={generateKey('31')} color={createColor(true)} active />
-    //   );
-    // }
   };
 
   const dropActiveBlock = () => {
@@ -153,29 +121,10 @@ const PlayField = () => {
       setActiveBlock(false);
       setActivePos(SPAWNPOINT);
     }
-
-    // const posBelow = activePos[1] + 1;
-    // if (
-    //   activeBlock &&
-    //   posBelow < VERTICAL &&
-    //   !fields[activePos[0]][activePos[1] + 1].object
-    // ) {
-    //   reorder(activePos[0], activePos[1]);
-    //   reorder(activePos[0], activePos[1] - 1);
-    //   setActivePos([activePos[0], activePos[1] + 1]);
-    // } else {
-    //   setActiveBlock(false);
-    //   setActivePos(SPAWNPOINT);
-    // }
   };
 
   const check = () => {
-    // let row = [];
-    // let column = [];
-
     for (let i = 0; i < HORIZONTAL; i++) {
-      // column = [];
-
       for (let j = 0; j < VERTICAL; j++) {
         if (
           j + 1 < VERTICAL &&
@@ -185,23 +134,8 @@ const PlayField = () => {
         ) {
           reorder(i, j);
         }
-
-        // if (
-        //   j < VERTICAL - 1 &&
-        //   fields[i][j].object &&
-        //   !fields[i][j].object.props.active &&
-        //   !fields[i][j + 1].object
-        // ) {
-        //   reorder(i, j);
-        // }
-
-        // column.push(fields[i][j]);
       }
-
-      // row.push(column);
     }
-
-    // setFields(row);
   };
 
   function reorder(i, j) {
@@ -211,10 +145,6 @@ const PlayField = () => {
     const tempStatus = ENTITY[`b${i}${j + 1}`].position[5];
     ENTITY[`b${i}${j + 1}`].position[5] = ENTITY[`b${i}${j}`].position[5];
     ENTITY[`b${i}${j}`].position[5] = tempStatus;
-
-    // const temp = fields[i][j].object;
-    // fields[i][j].object = fields[i][j + 1].object;
-    // fields[i][j + 1].object = temp;
   }
 
   function move(destination) {
@@ -260,10 +190,6 @@ const PlayField = () => {
       move([activePos[0] - 1, activePos[1]]);
       setActivePos([activePos[0] - 1, activePos[1]]);
     }
-
-    // !fields[activePos[0] - 1][activePos[1]].object
-    //   ? setActivePos([activePos[0] - 1, activePos[1]])
-    //   : null;
   };
 
   const onTapDown = () => {
@@ -285,15 +211,6 @@ const PlayField = () => {
     spawnBlock();
     check();
 
-    // if (cooldown > SPEED) {
-    //   setCooldown(0);
-    //   dropActiveBlock();
-    // }
-    //
-    // setCooldown(cooldown + 1);
-    // spawnBlock();
-    // check();
-
     return entities;
   };
 
@@ -308,16 +225,6 @@ const PlayField = () => {
     </>
   );
 };
-
-// {render()}
-// <Control
-//   moveLeft={onTapLeft}
-//   moveDown={onTapDown}
-//   moveRight={onTapRight}
-// />
-// <View style={styles.bottomMenu}>
-//   <Button label="drop" onPress={() => check()} />
-// </View>
 
 const styles = {
   engine: {
