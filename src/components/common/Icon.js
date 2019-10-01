@@ -1,4 +1,4 @@
-import React from 'react';
+import React from './node_modules/react';
 import {Dimensions, Image, TouchableOpacity} from 'react-native';
 
 const {width} = Dimensions.get('window');

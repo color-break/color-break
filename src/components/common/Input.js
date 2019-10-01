@@ -1,4 +1,4 @@
-import React from 'react';
+import React from './node_modules/react';
 import {Dimensions, TextInput, View} from 'react-native';
 import {Icon} from './Icon';
 

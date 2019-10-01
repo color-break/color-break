@@ -1,6 +1,6 @@
-import React from 'react';
+import React from './node_modules/react';
 import {Dimensions, View} from 'react-native';
-import {Button} from './common';
+import {Button} from './Common';
 
 const {width} = Dimensions.get('window');
 

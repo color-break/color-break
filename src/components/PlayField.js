@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect} from './node_modules/react';
 import {Dimensions, Text, View} from 'react-native';
 import {GameEngine} from 'react-native-game-engine';
 import Control from './Control';
-import {Button} from './common';
+import {Button} from './Common';
 
 const {width, height} = Dimensions.get('window');
 const HORIZONTAL = 7;
