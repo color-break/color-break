@@ -8,6 +8,7 @@ import React, {useState, useEffect} from 'react';
 import {Dimensions, Text, View} from 'react-native';
 import {GameEngine} from 'react-native-game-engine';
 import Control from './Control';
+import Block from './Game/Block';
 
 const {width, height} = Dimensions.get('window');
 const HORIZONTAL = 5;
@@ -18,27 +19,6 @@ const BLOCKWIDTH = width / 9;
 const OFFSETX = (width - BLOCKWIDTH * HORIZONTAL) / 2;
 const OFFSETY = (height - BLOCKWIDTH * VERTICAL) / 4;
 let ENTITY = {};
-
-const Block = ({position, color, coordinate, active}) => {
-  const style = {
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    left: position[0],
-    top: position[1],
-    width: BLOCKWIDTH,
-    height: BLOCKWIDTH,
-    backgroundColor: color ? color : '#fff',
-  };
-
-  return (
-    <View style={style}>
-      <Text>
-        [{coordinate[0]}, {coordinate[1]}]
-      </Text>
-    </View>
-  );
-};
 
 const createColor = color => {
   const colors = ['red', 'blue', 'green', 'yellow'];
@@ -54,10 +34,11 @@ const createEntity = () => {
   for (let i = 0; i < HORIZONTAL; i++) {
     for (let j = 0; j < VERTICAL; j++) {
       ENTITY[`b${i}${j}`] = {
+        width: BLOCKWIDTH,
+        height: BLOCKWIDTH,
         position: [OFFSETX + i * BLOCKWIDTH, OFFSETY + j * BLOCKWIDTH],
-        color: createColor(false),
         coordinate: [i, j],
-        active: false,
+        color: createColor(false),
         renderer: <Block />,
       };
     }
@@ -71,7 +52,6 @@ const PlayField = () => {
   const [cooldown, setCooldown] = useState(0);
 
   useEffect(() => createEntity(), []);
-
   useEffect(() => {
     if (fields.length === 0) {
       let grid = [];
@@ -167,27 +147,6 @@ const PlayField = () => {
     ENTITY[`b${activePos[0]}${activePos[1] - 1}`].active =
       ENTITY[`b${destination[0]}${destination[1] - 1}`].active;
     ENTITY[`b${destination[0]}${destination[1] - 1}`].active = temp;
-  }
-
-  function render() {
-    if (fields.length > 0) {
-      const row = [];
-      let column = [];
-
-      for (let i = 0; i < HORIZONTAL; i++) {
-        column = [];
-
-        for (let j = 0; j < VERTICAL; j++) {
-          fields[i][j].object
-            ? column.push(fields[i][j].object)
-            : column.push(<Square key={generateKey(`${i}${j}`)} i={i} j={j} />);
-        }
-
-        row.push(<View key={`view${i}`}>{column}</View>);
-      }
-
-      return <View style={styles.row}>{row}</View>;
-    }
   }
 
   const onTapLeft = () => {
