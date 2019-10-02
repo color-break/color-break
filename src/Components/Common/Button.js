@@ -6,12 +6,13 @@
 
 import React from 'react';
 import {Text, TouchableOpacity} from 'react-native';
+import config from '../../Config';
 
 const styles = {
   button: {
     height: 40,
     width: 80,
-    backgroundColor: '#5856d6',
+    backgroundColor: config.colors.indigo,
     borderRadius: 4,
     justifyContent: 'center',
     marginBottom: 8,
