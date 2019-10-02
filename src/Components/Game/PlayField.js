@@ -98,9 +98,9 @@ export default () => {
       setEntities(previous => {
         let state = previous;
 
-        state[`${activePos[0]}${activePos[1]}`].color = createColor(true);
+        state[`${activePos[0]}${activePos[1]}`].color = createColor();
         state[`${activePos[0]}${activePos[1]}`].active = true;
-        state[`${activePos[0]}${activePos[1] - 1}`].color = createColor(true);
+        state[`${activePos[0]}${activePos[1] - 1}`].color = createColor();
         state[`${activePos[0]}${activePos[1] - 1}`].active = true;
 
         return state;
