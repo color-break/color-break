@@ -16,7 +16,7 @@ import config from '../../Config';
  *
  * @var {Array}
  */
-const SPAWNPOINT = [Math.trunc(config.tiles.x / 2), 1];
+const SPAWNPOINT = [Math.trunc(config.tiles.x / 2), 0];
 
 /**
  * Generate a random color from color configuration.
@@ -67,6 +67,18 @@ const createEntities = () => {
   return entities;
 };
 
+const getPattern = type => {
+  const x = SPAWNPOINT[0];
+  const y = SPAWNPOINT[1];
+
+  switch (type) {
+    case 'plate':
+      return [[x, y], [x + 1, y]];
+    default:
+      return [[x, y], [x, y + 1]];
+  }
+};
+
 /**
  * Component stylesheet.
  *
@@ -86,47 +98,74 @@ const styles = {
 export default () => {
   const [entities, setEntities] = useState(createEntities());
   const [activeBlock, setActiveBlock] = useState(false);
-  const [activePos, setActivePos] = useState(SPAWNPOINT);
+  const [activePos, setActivePos] = useState(getPattern('default'));
 
   const spawnBlock = () => {
-    if (
-      !activeBlock &&
-      !entities[`${activePos[0]}${activePos[1]}`].color &&
-      !entities[`${activePos[0]}${activePos[1] - 1}`].color
-    ) {
-      setActiveBlock(true);
-      setEntities(previous => {
-        let state = previous;
+    if (!activeBlock) {
+      let available = false;
 
-        state[`${activePos[0]}${activePos[1]}`].color = createColor();
-        state[`${activePos[0]}${activePos[1]}`].active = true;
-        state[`${activePos[0]}${activePos[1] - 1}`].color = createColor();
-        state[`${activePos[0]}${activePos[1] - 1}`].active = true;
-
-        return state;
+      activePos.forEach(item => {
+        if (!entities[`${item[0]}${item[1]}`].color) {
+          available = true;
+        }
       });
+
+      if (available) {
+        setActiveBlock(true);
+
+        setActivePos(previous => {
+          let state = previous;
+          return state.sort(function(a, b) {
+            return b[1] - a[1];
+          });
+        });
+
+        setEntities(previous => {
+          let state = previous;
+
+          activePos.forEach(item => {
+            state[`${item[0]}${item[1]}`].color = createColor();
+            state[`${item[0]}${item[1]}`].active = true;
+          });
+
+          return state;
+        });
+      }
     }
   };
 
   const dropActiveBlock = () => {
-    const posBelow = activePos[1] + 1;
+    const posBelow = activePos[0][1] + 1;
 
-    if (activeBlock && posBelow < config.tiles.y && !entities[`${activePos[0]}${posBelow}`].color) {
-      reorder(activePos[0], activePos[1]);
-      reorder(activePos[0], activePos[1] - 1);
-      setActivePos([activePos[0], posBelow]);
+    if (
+      activeBlock &&
+      posBelow < config.tiles.y &&
+      entities[`${activePos[0][0]}${posBelow}`] &&
+      !entities[`${activePos[0][0]}${posBelow}`].color
+    ) {
+      setEntities(previous => {
+        let state = previous;
+        activePos.forEach(item => reorder(item[0], item[1]));
+
+        return state;
+      });
+
+      setActivePos(previous => {
+        let state = previous;
+        state.forEach(item => item[1]++);
+
+        return state;
+      });
     } else {
       setEntities(previous => {
         let state = previous;
-
-        state[`${activePos[0]}${activePos[1]}`].active = false;
-        state[`${activePos[0]}${activePos[1] - 1}`].active = false;
+        activePos.forEach(item => (state[`${item[0]}${item[1]}`].active = false));
 
         return state;
       });
 
       setActiveBlock(false);
-      setActivePos(SPAWNPOINT);
+      setActivePos(getPattern('default'));
     }
   };
 
@@ -213,7 +252,6 @@ export default () => {
 
   const update = () => {
     spawnBlock();
-    check();
 
     return entities;
   };
