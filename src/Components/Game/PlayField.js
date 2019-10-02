@@ -32,10 +32,10 @@ const createColor = () => {
 /**
  * Generate a default entity for GameEngine component used later.
  *
- * @param {Number}  x - Indicates the x coordinate in array tiles.
- * @param {Number}  y - Indicates the y coordinate in array tiles.
- * @param {String}  [color=null] - The color for tiles.
- * @param {Boolean} [active=false] - Active status for current tile.
+ * @param  {Number}  x - Indicates the x coordinate in array tiles.
+ * @param  {Number}  y - Indicates the y coordinate in array tiles.
+ * @param  {String}  [color=null] - The color for tiles.
+ * @param  {Boolean} [active=false] - Active status for current tile.
  * @return {Object}
  */
 const createEntity = (x, y, color = null, active = false) => {
