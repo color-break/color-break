@@ -20,7 +20,7 @@ export default {
   },
   colors: [
     '#34c759', // Green
-    '#5856d6', // Purple
+    '#5856d6', // Indigo
     '#ff9500', // Orange
   ],
   offset: {
