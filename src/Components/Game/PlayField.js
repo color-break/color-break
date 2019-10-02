@@ -5,7 +5,6 @@
  */
 
 import React, {useState} from 'react';
-import {Text} from 'react-native';
 import {GameEngine} from 'react-native-game-engine';
 import Block from './Block';
 import Control from './Control';
@@ -24,7 +23,8 @@ const SPAWNPOINT = [Math.trunc(config.tiles.x / 2), 0];
  * @return {String}
  */
 const createColor = () => {
-  const random = Math.floor(Math.random() * Math.floor(config.colors.length));
+  const keys = Object.keys(config.colors);
+  const random = keys[(keys.length * Math.random()) << 0];
 
   return config.colors[random];
 };
@@ -32,10 +32,10 @@ const createColor = () => {
 /**
  * Generate a default entity for GameEngine component used later.
  *
- * @param {Number}  x - Indicates the x coordinate in array tiles.
- * @param {Number}  y - Indicates the y coordinate in array tiles.
- * @param {String}  [color=null] - The color for tiles.
- * @param {Boolean} [active=false] - Active status for current tile.
+ * @param  {Number}  x - Indicates the x coordinate in array tiles.
+ * @param  {Number}  y - Indicates the y coordinate in array tiles.
+ * @param  {String}  [color=null] - The color for tiles.
+ * @param  {Boolean} [active=false] - Active status for current tile.
  * @return {Object}
  */
 const createEntity = (x, y, color = null, active = false) => {
@@ -259,9 +259,6 @@ export default () => {
   return (
     <>
       <GameEngine style={styles.engine} systems={[update]} entities={entities} />
-      <Text>
-        [{activePos[0]}, {activePos[1]}]
-      </Text>
       <Control moveLeft={onTapLeft} moveDown={onTapDown} moveRight={onTapRight} rotate={onTapRotate} />
     </>
   );

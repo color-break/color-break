@@ -18,11 +18,11 @@ export default {
     width: BLOCKWIDTH,
     height: BLOCKWIDTH,
   },
-  colors: [
-    '#34c759', // Green
-    '#5856d6', // Purple
-    '#ff9500', // Orange
-  ],
+  colors: {
+    green: '#34c759',
+    indigo: '#5856d6',
+    orange: '#ff9500',
+  },
   offset: {
     x: (width - BLOCKWIDTH * TILES.x) / 2,
     y: (height - BLOCKWIDTH * TILES.y) / 4,
