@@ -19,13 +19,13 @@ const styles = {
   },
 };
 
-export default ({moveLeft, moveDown, moveRight}) => {
+export default ({moveLeft, moveDown, moveRight, rotate}) => {
   return (
     <View style={styles.container}>
       <Button style={styles.button} label="Left" onPress={moveLeft} />
       <Button style={styles.button} label="Down" onPress={moveDown} />
       <Button style={styles.button} label="Right" onPress={moveRight} />
-      <Button style={styles.button} label="Rotate" onPress={() => {}} />
+      <Button style={styles.button} label="Rotate" onPress={rotate} />
     </View>
   );
 };

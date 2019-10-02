@@ -5,6 +5,7 @@
  */
 
 import React, {useState} from 'react';
+import {Text} from 'react-native';
 import {GameEngine} from 'react-native-game-engine';
 import Block from './Block';
 import Control from './Control';
@@ -77,6 +78,11 @@ const styles = {
   },
 };
 
+/**
+ * PlayField React component.
+ *
+ * @return {Object}
+ */
 export default () => {
   const [entities, setEntities] = useState(createEntities());
   const [activeBlock, setActiveBlock] = useState(false);
@@ -201,6 +207,10 @@ export default () => {
     console.log('move right', activePos[0], config.tiles.x);
   };
 
+  const onTapRotate = () => {
+    //
+  };
+
   const update = () => {
     spawnBlock();
     check();
@@ -211,7 +221,10 @@ export default () => {
   return (
     <>
       <GameEngine style={styles.engine} systems={[update]} entities={entities} />
-      <Control moveLeft={onTapLeft} moveDown={onTapDown} moveRight={onTapRight} />
+      <Text>
+        [{activePos[0]}, {activePos[1]}]
+      </Text>
+      <Control moveLeft={onTapLeft} moveDown={onTapDown} moveRight={onTapRight} rotate={onTapRotate} />
     </>
   );
 };
