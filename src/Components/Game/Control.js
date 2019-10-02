@@ -22,10 +22,18 @@ const styles = {
 export default ({moveLeft, moveDown, moveRight, rotate}) => {
   return (
     <View style={styles.container}>
-      <Button style={styles.button} label="Left" onPress={moveLeft} />
-      <Button style={styles.button} label="Down" onPress={moveDown} />
-      <Button style={styles.button} label="Right" onPress={moveRight} />
-      <Button style={styles.button} label="Rotate" onPress={rotate} />
+      <Button style={styles.button} onPress={moveLeft}>
+        Left
+      </Button>
+      <Button style={styles.button} onPress={moveDown}>
+        Down
+      </Button>
+      <Button style={styles.button} onPress={moveRight}>
+        Right
+      </Button>
+      <Button style={styles.button} onPress={rotate}>
+        Rotate
+      </Button>
     </View>
   );
 };
