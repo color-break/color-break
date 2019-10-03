@@ -67,6 +67,12 @@ const createEntities = () => {
   return entities;
 };
 
+/**
+ * Generate an array of active tiles coordination.
+ *
+ * @param  {String}  type - Used to determine which tiles pattern to return.
+ * @return {Array}
+ */
 const getPattern = type => {
   const x = SPAWNPOINT[0];
   const y = SPAWNPOINT[1];
@@ -102,11 +108,11 @@ export default () => {
 
   const spawnBlock = () => {
     if (!activeBlock) {
-      let available = false;
+      let available = true;
 
       activePos.forEach(item => {
-        if (!entities[`${item[0]}${item[1]}`].color) {
-          available = true;
+        if (entities[`${item[0]}${item[1]}`].color) {
+          available = false;
         }
       });
 
